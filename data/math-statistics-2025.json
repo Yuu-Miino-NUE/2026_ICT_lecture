@@ -1,0 +1,80 @@
+{
+  "meta": {
+    "title": "National Mathematics Statistics",
+    "subject": "Mathematics",
+    "year": 2025,
+    "version": "1.0",
+    "description": "Mock national statistics dataset for educational purposes"
+  },
+
+  "population": {
+    "students": 124583
+  },
+
+  "scoreRange": {
+    "min": 0,
+    "max": 100
+  },
+
+  "statistics": {
+    "mean": 66.8,
+    "median": 68,
+    "mode": 72,
+    "variance": 172.4,
+    "standardDeviation": 13.1,
+
+    "quartiles": {
+      "q1": 58,
+      "q2": 68,
+      "q3": 77,
+      "iqr": 19
+    },
+
+    "minimum": 11,
+    "maximum": 100
+  },
+
+  "percentiles": {
+    "p10": 48,
+    "p25": 58,
+    "p50": 68,
+    "p75": 77,
+    "p90": 84,
+    "p95": 89,
+    "p99": 96
+  },
+
+  "questionAverages": [
+    { "question": "問1",  "average": 7.1 },
+    { "question": "問2",  "average": 6.8 },
+    { "question": "問3",  "average": 8.4 },
+    { "question": "問4",  "average": 6.0 },
+    { "question": "問5",  "average": 6.9 },
+    { "question": "問6",  "average": 6.4 },
+    { "question": "問7",  "average": 4.3 },
+    { "question": "問8",  "average": 6.7 },
+    { "question": "問9",  "average": 7.0 },
+    { "question": "問10", "average": 7.2 }
+  ],
+
+  "distribution": [
+    { "score": 0,   "count": 3     },
+    { "score": 10,  "count": 122   },
+    { "score": 20,  "count": 640   },
+    { "score": 30,  "count": 1980  },
+    { "score": 40,  "count": 6450  },
+    { "score": 50,  "count": 14820 },
+    { "score": 60,  "count": 25800 },
+    { "score": 70,  "count": 31250 },
+    { "score": 80,  "count": 24800 },
+    { "score": 90,  "count": 13200 },
+    { "score": 100, "count": 5518  }
+  ],
+
+  "gradingGuide": {
+    "excellent":        85,
+    "good":             70,
+    "average":          60,
+    "needsImprovement": 40
+  }
+}
