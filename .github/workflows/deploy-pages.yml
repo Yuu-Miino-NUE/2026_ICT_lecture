@@ -10,7 +10,6 @@ permissions:
   contents: read
   pages: write
   id-token: write
-  administration: write   # enablement: true で Pages を自動有効化するために必要
 
 # 同時デプロイを防ぐ（進行中のデプロイはキャンセルしない）
 concurrency:
@@ -30,9 +29,6 @@ jobs:
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
-        with:
-          # Pages が未有効の場合でも自動で有効化する
-          enablement: true
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
