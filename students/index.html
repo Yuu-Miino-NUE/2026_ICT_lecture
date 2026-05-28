@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>学生制作サイト一覧 — 2026 ICT 講義</title>
+  <style>
+    :root {
+      --accent: #2563eb;
+      --accent-light: #dbeafe;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --border: #e2e8f0;
+      --text: #1e293b;
+      --muted: #64748b;
+      --hover: #eff6ff;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Hiragino Sans", "Yu Gothic", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    header {
+      background: var(--accent);
+      color: #fff;
+      padding: 2.5rem 1.5rem;
+      text-align: center;
+    }
+    header h1 { font-size: 1.8rem; font-weight: 700; margin-bottom: .4rem; }
+    header p  { font-size: 1rem; opacity: .85; }
+
+    nav {
+      max-width: 860px;
+      margin: 1.25rem auto 0;
+      padding: 0 1.5rem;
+    }
+    nav a {
+      color: var(--accent);
+      text-decoration: none;
+      font-size: .9rem;
+      font-weight: 600;
+    }
+    nav a:hover { text-decoration: underline; }
+
+    main {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 1.5rem 1.5rem 4rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem 1.75rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,.06);
+    }
+
+    h2 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+    }
+    h2::before { content: attr(data-icon); font-size: 1.25rem; }
+
+    .count {
+      margin-left: auto;
+      font-size: .85rem;
+      font-weight: 600;
+      color: var(--muted);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 99px;
+      padding: .15rem .7rem;
+    }
+
+    .list {
+      display: flex;
+      flex-direction: column;
+      gap: .5rem;
+    }
+
+    .list-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: .75rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      transition: background .12s;
+    }
+    .list-item:hover { background: var(--hover); }
+
+    .item-index {
+      font-size: .8rem;
+      font-weight: 700;
+      color: var(--muted);
+      min-width: 1.8rem;
+      text-align: right;
+    }
+
+    .item-name {
+      font-weight: 600;
+      min-width: 10rem;
+      flex-shrink: 0;
+    }
+
+    .item-url {
+      flex: 1;
+      overflow: hidden;
+    }
+    .item-url a {
+      color: var(--accent);
+      text-decoration: none;
+      font-size: .9rem;
+      word-break: break-all;
+    }
+    .item-url a:hover { text-decoration: underline; }
+
+    .item-open {
+      flex-shrink: 0;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: .3rem .75rem;
+      font-size: .8rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .item-open:hover { opacity: .85; }
+
+    .empty {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--muted);
+      font-size: .95rem;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 2rem;
+      color: var(--muted);
+    }
+
+    .error {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      border-radius: 8px;
+      padding: .75rem 1rem;
+      color: #991b1b;
+      font-size: .9rem;
+    }
+
+    footer {
+      text-align: center;
+      font-size: .82rem;
+      color: var(--muted);
+      padding-bottom: 2rem;
+    }
+
+    @media (max-width: 600px) {
+      .item-name { min-width: 6rem; }
+      .list-item { flex-wrap: wrap; gap: .5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🌐 学生制作サイト一覧</h1>
+  <p>2026年度 ICT 活用講義 — 受講生の制作物</p>
+</header>
+
+<nav>
+  <a href="../">← トップページへ戻る</a>
+</nav>
+
+<main>
+  <div class="card">
+    <h2 data-icon="📋">提出一覧 <span class="count" id="count">0 件</span></h2>
+    <div class="list" id="list">
+      <div class="loading">読み込み中…</div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <p>2026 ICT 活用講義 — Yuu Miino, Naruto University of Education</p>
+</footer>
+
+<script>
+  const DATA_URL = "../data/students.json";
+
+  async function load() {
+    const list = document.getElementById("list");
+    const count = document.getElementById("count");
+
+    try {
+      const res = await fetch(DATA_URL);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const { submissions } = await res.json();
+
+      count.textContent = `${submissions.length} 件`;
+
+      if (submissions.length === 0) {
+        list.innerHTML = '<div class="empty">まだ提出がありません。</div>';
+        return;
+      }
+
+      list.innerHTML = submissions.map((s, i) => `
+        <div class="list-item">
+          <span class="item-index">${i + 1}</span>
+          <span class="item-name">${esc(s.name)}</span>
+          <span class="item-url">
+            <a href="${esc(s.url)}" target="_blank" rel="noopener noreferrer">${esc(s.url)}</a>
+          </span>
+          <a class="item-open" href="${esc(s.url)}" target="_blank" rel="noopener noreferrer">開く</a>
+        </div>
+      `).join("");
+    } catch (e) {
+      list.innerHTML = `<div class="error">データの読み込みに失敗しました: ${esc(e.message)}</div>`;
+    }
+  }
+
+  function esc(str) {
+    return String(str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  load();
+</script>
+
+</body>
+</html>
